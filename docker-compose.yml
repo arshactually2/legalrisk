@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  web:
+    image: node:14
+    working_dir: /app
+    volumes:
+      - ./frontend:/app  # Ensure this path points to your Next.js project
+    ports:
+      - "3000:3000"
+    command: sh -c "npm install && npm run dev"
+    environment:
+      - CHOKIDAR_USEPOLLING=true  # Ensures Next.js detects changes in files on Windows
+
+  backend:
+    build:
+      context: ./backend
+    volumes:
+      - ./backend:/app
+    ports:
+      - "8000:8000"
+    command: uvicorn main:app --host 0.0.0.0 --port 8000
